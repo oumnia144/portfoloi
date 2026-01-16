@@ -5,7 +5,6 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false); 
   const [activeSection, setActiveSection] = useState('home'); 
   const [isScrolled, setIsScrolled] = useState(false); 
-  const [darkMode, setDarkMode] = useState(true); 
   const [language, setLanguage] = useState('fr'); 
   const [photoHover, setPhotoHover] = useState(false); 
 
