@@ -36,7 +36,7 @@ export default function App() {
 
   const handleDownloadCV = () => { 
     const link = document.createElement('a'); 
-    link.href = '/oumnia cv.pdf'; 
+    link.href = '/Oumnia-cv.pdf'; 
     link.download = 'CV_Oumnia_Ouali.pdf'; 
     link.click(); 
     const messages = { 
