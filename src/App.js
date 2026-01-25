@@ -7,6 +7,8 @@ export default function App() {
   const [isScrolled, setIsScrolled] = useState(false); 
   const [language, setLanguage] = useState('fr'); 
   const [photoHover, setPhotoHover] = useState(false); 
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [isLanguageMobileOpen, setIsLanguageMobileOpen] = useState(false);
 
   useEffect(() => { 
     const handleScroll = () => { 
@@ -25,6 +27,20 @@ export default function App() {
     window.addEventListener('scroll', handleScroll); 
     return () => window.removeEventListener('scroll', handleScroll); 
   }, []); 
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isLanguageOpen && !event.target.closest('.language-selector')) {
+        setIsLanguageOpen(false);
+      }
+      if (isLanguageMobileOpen && !event.target.closest('.mobile-language-selector')) {
+        setIsLanguageMobileOpen(false);
+      }
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isLanguageOpen, isLanguageMobileOpen]);
 
   const scrollToSection = (id) => { 
     const element = document.getElementById(id); 
@@ -194,7 +210,7 @@ export default function App() {
             company: "Lycée Elsalam", 
             period: "2022 - 2023", 
             description: "Option Sciences Physiques - Formation scientifique approfondie avec bases mathématiques et physiques solides", 
-            skills: ["Physique", "Chimie", "Mathématiques", "Sciences de l'ingénieur", "Méthodologie"] 
+            skills: ["Physique", "Chimie", "Mathématiques", "Méthodologie"] 
           } 
         ] 
       }, 
@@ -273,7 +289,7 @@ export default function App() {
             company: "Elsalam High School", 
             period: "2022 - 2023", 
             description: "Physical Sciences Option - In-depth scientific training with solid mathematical and physical foundations", 
-            skills: ["Physics", "Chemistry", "Mathematics", "Engineering Sciences", "Methodology"] 
+            skills: ["Physics", "Chemistry", "Mathematics", "Methodology"] 
           } 
         ] 
       }, 
@@ -352,7 +368,7 @@ export default function App() {
             company: "ثانوية السلام", 
             period: "2022 - 2023", 
             description: "تخصص العلوم الفيزيائية - دراسة علمية متعمقة مع أسس رياضية وفيزيائية صلبة", 
-            skills: ["الفيزياء", "الكيمياء", "الرياضيات", "علوم الهندسة", "المنهجية"] 
+            skills: ["الفيزياء", "الكيمياء", "الرياضيات", "المنهجية"] 
           } 
         ] 
       }, 
@@ -551,14 +567,22 @@ export default function App() {
                   <span className="font-medium">{label}</span> 
                 </button> 
               ))} 
-              <div className="relative group"> 
-                <button className="p-2 rounded-full bg-purple-900/50 text-purple-300 hover:scale-110 transition-transform flex items-center space-x-1"> 
+              <div className="relative group language-selector"> 
+                <button 
+                  onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+                  className="p-2 rounded-full bg-purple-900/50 text-purple-300 hover:scale-110 transition-transform flex items-center space-x-1"
+                > 
                   <Globe size={20} /> 
                   <span className="font-medium text-sm">{language.toUpperCase()}</span> 
                 </button> 
-                <div className="absolute top-full left-0 mt-2 w-32 bg-gray-800 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50"> 
+                <div className={`absolute top-full left-0 mt-2 w-32 bg-gray-800 rounded-xl shadow-2xl z-50 transition-all duration-300 ${
+                  isLanguageOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+                }`}> 
                   <button 
-                    onClick={() => setLanguage('fr')} 
+                    onClick={() => {
+                      setLanguage('fr');
+                      setIsLanguageOpen(false);
+                    }} 
                     className={`w-full px-4 py-3 text-left hover:bg-gray-700 rounded-t-xl ${ 
                       language === 'fr' ? 'bg-purple-900/30 text-purple-300' : 'text-gray-300' 
                     }`} 
@@ -566,7 +590,10 @@ export default function App() {
                     🇫🇷 Français 
                   </button> 
                   <button 
-                    onClick={() => setLanguage('en')} 
+                    onClick={() => {
+                      setLanguage('en');
+                      setIsLanguageOpen(false);
+                    }} 
                     className={`w-full px-4 py-3 text-left hover:bg-gray-700 ${ 
                       language === 'en' ? 'bg-purple-900/30 text-purple-300' : 'text-gray-300' 
                     }`} 
@@ -574,7 +601,10 @@ export default function App() {
                     🇬🇧 English 
                   </button> 
                   <button 
-                    onClick={() => setLanguage('ar')} 
+                    onClick={() => {
+                      setLanguage('ar');
+                      setIsLanguageOpen(false);
+                    }} 
                     className={`w-full px-4 py-3 text-left hover:bg-gray-700 rounded-b-xl ${ 
                       language === 'ar' ? 'bg-purple-900/30 text-purple-300' : 'text-gray-300' 
                     }`} 
@@ -585,31 +615,45 @@ export default function App() {
               </div> 
             </div> 
             <div className="flex items-center space-x-4 md:hidden"> 
-              <div className="relative"> 
-                <button className="p-2 rounded-full bg-purple-900/50 text-purple-300"> 
+              <div className="relative mobile-language-selector"> 
+                <button 
+                  onClick={() => setIsLanguageMobileOpen(!isLanguageMobileOpen)}
+                  className="p-2 rounded-full bg-purple-900/50 text-purple-300"
+                > 
                   <Globe size={20} /> 
                 </button> 
-                <div className="absolute top-full right-0 mt-2 w-32 bg-gray-800 rounded-xl shadow-2xl"> 
+                <div className={`absolute top-full right-0 mt-2 w-32 bg-gray-800 rounded-xl shadow-2xl z-50 ${
+                  isLanguageMobileOpen ? 'block' : 'hidden'
+                }`}> 
                   <button 
-                    onClick={() => setLanguage('fr')} 
+                    onClick={() => {
+                      setLanguage('fr');
+                      setIsLanguageMobileOpen(false);
+                    }} 
                     className={`w-full px-4 py-3 text-left hover:bg-gray-700 rounded-t-xl ${ 
-                      language === 'fr' ? 'bg-purple-900/30' : '' 
+                      language === 'fr' ? 'bg-purple-900/30 text-purple-300' : 'text-gray-300' 
                     }`} 
                   > 
                     🇫🇷 Français 
                   </button> 
                   <button 
-                    onClick={() => setLanguage('en')} 
+                    onClick={() => {
+                      setLanguage('en');
+                      setIsLanguageMobileOpen(false);
+                    }} 
                     className={`w-full px-4 py-3 text-left hover:bg-gray-700 ${ 
-                      language === 'en' ? 'bg-purple-900/30' : '' 
+                      language === 'en' ? 'bg-purple-900/30 text-purple-300' : 'text-gray-300' 
                     }`} 
                   > 
                     🇬🇧 English 
                   </button> 
                   <button 
-                    onClick={() => setLanguage('ar')} 
+                    onClick={() => {
+                      setLanguage('ar');
+                      setIsLanguageMobileOpen(false);
+                    }} 
                     className={`w-full px-4 py-3 text-left hover:bg-gray-700 rounded-b-xl ${ 
-                      language === 'ar' ? 'bg-purple-900/30' : '' 
+                      language === 'ar' ? 'bg-purple-900/30 text-purple-300' : 'text-gray-300' 
                     }`} 
                   > 
                     🇲🇦 العربية 
