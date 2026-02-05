@@ -156,7 +156,6 @@ export default function App() {
     } 
   ]; 
 
-  // النصوص حسب اللغة
   const texts = { 
     fr: { 
       nav: { home: 'Accueil', about: 'À propos', projects: 'Projets', experience: 'Formation', contact: 'Contact' }, 
